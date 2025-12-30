@@ -1,5 +1,9 @@
 import React, { createContext, useContext, useState, useRef, useEffect } from 'react';
 
+// 1. IMPORT THE FILE HERE
+// This tells the bundler to grab the file from the current folder
+import energyFile from './energy.mp3'; 
+
 interface MusicContextType {
   isPlaying: boolean;
   toggleMusic: () => void;
@@ -11,15 +15,15 @@ const MusicContext = createContext<MusicContextType | undefined>(undefined);
 
 export const MusicProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [volume, setVolume] = useState(0.3);
+  const [volume, setVolume] = useState(0.3); // Default max volume
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const fadeIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    // Create audio element with a royalty-free futuristic track
-    audioRef.current = new Audio('https://assets.mixkit.co/music/preview/mixkit-tech-house-vibes-130.mp3');
+    // 2. USE THE IMPORTED VARIABLE HERE
+    audioRef.current = new Audio(energyFile);
     audioRef.current.loop = true;
-    audioRef.current.volume = 0;
+    audioRef.current.volume = 0; // Start at 0 for fade in
 
     return () => {
       if (audioRef.current) {
@@ -35,13 +39,16 @@ export const MusicProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const fadeIn = () => {
     if (!audioRef.current) return;
     
-    let currentVolume = 0;
-    audioRef.current.volume = 0;
-    audioRef.current.play();
+    // Clear any existing fade intervals
+    if (fadeIntervalRef.current) clearInterval(fadeIntervalRef.current);
+
+    let currentVolume = audioRef.current.volume;
+    audioRef.current.play().catch(e => console.log("Play failed:", e));
 
     fadeIntervalRef.current = setInterval(() => {
+      // Use the 'volume' state as the target cap
       if (currentVolume < volume) {
-        currentVolume = Math.min(currentVolume + 0.02, volume);
+        currentVolume = Math.min(currentVolume + 0.05, volume); // Increased step slightly for responsiveness
         if (audioRef.current) {
           audioRef.current.volume = currentVolume;
         }
@@ -50,17 +57,20 @@ export const MusicProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           clearInterval(fadeIntervalRef.current);
         }
       }
-    }, 50);
+    }, 100);
   };
 
   const fadeOut = () => {
     if (!audioRef.current) return;
+    
+    // Clear any existing fade intervals
+    if (fadeIntervalRef.current) clearInterval(fadeIntervalRef.current);
 
     let currentVolume = audioRef.current.volume;
 
     fadeIntervalRef.current = setInterval(() => {
       if (currentVolume > 0) {
-        currentVolume = Math.max(currentVolume - 0.02, 0);
+        currentVolume = Math.max(currentVolume - 0.05, 0);
         if (audioRef.current) {
           audioRef.current.volume = currentVolume;
         }
@@ -72,27 +82,27 @@ export const MusicProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           clearInterval(fadeIntervalRef.current);
         }
       }
-    }, 50);
+    }, 100);
   };
 
   const toggleMusic = () => {
-    if (fadeIntervalRef.current) {
-      clearInterval(fadeIntervalRef.current);
-    }
-
     if (isPlaying) {
       fadeOut();
+      setIsPlaying(false);
     } else {
       fadeIn();
+      setIsPlaying(true);
     }
-    setIsPlaying(!isPlaying);
   };
 
+  // 3. FIXED BUG: Removed 'isPlaying' from dependency array
+  // If we kept 'isPlaying' here, it would snap the volume to 0.3 
+  // immediately when you clicked play, ruining the fade effect.
   useEffect(() => {
-    if (audioRef.current && isPlaying) {
+    if (audioRef.current && isPlaying && !fadeIntervalRef.current) {
       audioRef.current.volume = volume;
     }
-  }, [volume, isPlaying]);
+  }, [volume]); 
 
   return (
     <MusicContext.Provider value={{ isPlaying, toggleMusic, volume, setVolume }}>
