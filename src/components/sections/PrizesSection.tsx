@@ -1,5 +1,5 @@
 import React from 'react';
-import { Trophy, Medal, Award, Star, Gift, Sparkles } from 'lucide-react';
+import { Trophy, Medal, Award, Star, Gift, Sparkles, Check } from 'lucide-react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import trophyImage from '@/assets/trophy.jpg';
 
@@ -8,25 +8,34 @@ const prizes = [
     position: 1,
     title: 'Grand Champion',
     prize: '₹1,00,000',
-    perks: ['Trophy', 'Certificate', 'Internship Opportunity', 'Swag Kit'],
+    perks: ['Championship Trophy', 'Gold Certificate', 'Paid Internship', 'Exclusive Merch Kit'],
     icon: Trophy,
-    color: 'from-yellow-500 to-amber-600',
+    theme: 'gold',
+    gradient: 'from-yellow-400 via-amber-500 to-yellow-600',
+    shadow: 'shadow-yellow-500/20',
+    border: 'border-yellow-500/50',
   },
   {
     position: 2,
     title: 'First Runner-up',
     prize: '₹50,000',
-    perks: ['Medal', 'Certificate', 'Tech Gadgets', 'Swag Kit'],
+    perks: ['Silver Medal', 'Certificate of Excellence', 'Tech Gadgets', 'Premium Swag'],
     icon: Medal,
-    color: 'from-gray-300 to-gray-500',
+    theme: 'silver',
+    gradient: 'from-gray-300 via-gray-400 to-gray-500',
+    shadow: 'shadow-gray-400/20',
+    border: 'border-gray-400/50',
   },
   {
     position: 3,
     title: 'Second Runner-up',
     prize: '₹25,000',
-    perks: ['Medal', 'Certificate', 'Vouchers', 'Swag Kit'],
+    perks: ['Bronze Medal', 'Certificate of Merit', 'Gift Vouchers', 'Participant Kit'],
     icon: Award,
-    color: 'from-orange-400 to-orange-600',
+    theme: 'bronze',
+    gradient: 'from-orange-400 via-amber-700 to-orange-800',
+    shadow: 'shadow-orange-500/20',
+    border: 'border-orange-500/50',
   },
 ];
 
@@ -41,120 +50,138 @@ const PrizesSection: React.FC = () => {
   const { ref: podiumRef, isVisible: podiumVisible } = useScrollAnimation<HTMLDivElement>();
 
   return (
-    <section id="prizes" className="relative py-24 lg:py-32 overflow-hidden">
-      {/* Background with Trophy Image */}
-      <div className="absolute inset-0">
+    <section id="prizes" className="relative py-24 lg:py-32 overflow-hidden bg-black">
+      {/* Background with Trophy Image Overlay */}
+      <div className="absolute inset-0 z-0">
         <img 
           src={trophyImage} 
           alt="Trophy Background" 
-          className="w-full h-full object-cover opacity-20"
+          className="w-full h-full object-cover opacity-10 mix-blend-luminosity"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-background/90 to-background" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/90 to-transparent" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(var(--primary-rgb),0.1),transparent)]" />
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div 
           ref={titleRef}
-          className={`text-center mb-20 transition-all duration-700
+          className={`text-center mb-24 transition-all duration-700
                       ${titleVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
         >
           <span className="inline-block px-4 py-1.5 mb-4 font-rajdhani font-medium text-sm uppercase tracking-wider
-                          text-primary bg-primary/10 border border-primary/20 rounded-full">
+                          text-primary bg-primary/10 border border-primary/20 rounded-full animate-pulse">
             Victory Lane
           </span>
-          <h2 className="font-orbitron text-4xl sm:text-5xl lg:text-6xl font-bold mb-6">
-            <span className="text-gradient-racing">Prizes</span> & Rewards
+          <h2 className="font-orbitron text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 text-white">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-white to-primary">Prizes</span> & Rewards
           </h2>
-          <p className="font-rajdhani text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
+          <p className="font-rajdhani text-lg sm:text-xl text-zinc-400 max-w-3xl mx-auto">
             Race to the podium and claim your glory. Massive prizes await the champions!
           </p>
         </div>
 
-        {/* Podium Style Prizes */}
+        {/* Podium Layout */}
         <div 
           ref={podiumRef}
-          className={`flex flex-col lg:flex-row items-end justify-center gap-6 mb-16 transition-all duration-700
-                      ${podiumVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+          className={`flex flex-col lg:flex-row items-center lg:items-end justify-center gap-6 lg:gap-8 mb-20 transition-all duration-1000
+                      ${podiumVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}
         >
-          {/* Reorder for podium effect: 2nd, 1st, 3rd */}
+          {/* Order: 2nd, 1st, 3rd for visual podium effect */}
           {[prizes[1], prizes[0], prizes[2]].map((prize, idx) => {
             const isFirst = prize.position === 1;
-            const height = isFirst ? 'h-96' : prize.position === 2 ? 'h-80' : 'h-72';
+            // Heights: First place is tallest
+            const cardHeight = isFirst ? 'min-h-[28rem]' : 'min-h-[24rem]';
+            const orderClass = isFirst ? 'lg:order-2 order-1' : idx === 0 ? 'lg:order-1 order-2' : 'lg:order-3 order-3';
             
             return (
               <div 
                 key={prize.position}
-                className={`w-full lg:w-1/3 max-w-sm ${isFirst ? 'lg:order-2' : idx === 0 ? 'lg:order-1' : 'lg:order-3'}`}
-                style={{ transitionDelay: `${idx * 200}ms` }}
+                className={`w-full max-w-sm relative group ${orderClass}`}
               >
-                <div className={`relative ${height} card-racing p-6 flex flex-col overflow-hidden
-                                 ${isFirst ? 'border-primary/50 shadow-neon-strong' : ''}`}>
-                  {/* Shine Effect */}
-                  <div className="absolute inset-0 holographic opacity-20" />
-                  
-                  {/* Position Badge */}
-                  <div className={`absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-16 rounded-full 
-                                  bg-gradient-to-br ${prize.color} flex items-center justify-center
-                                  border-4 border-background shadow-lg
-                                  ${isFirst ? 'animate-float' : ''}`}>
-                    <span className="font-orbitron text-2xl font-black text-background">
-                      {prize.position}
-                    </span>
+                {/* Glow Effect behind card */}
+                <div className={`absolute inset-0 bg-gradient-to-b ${prize.gradient} opacity-20 blur-2xl -z-10 group-hover:opacity-40 transition-opacity duration-500`} />
+
+                <div className={`relative ${cardHeight} flex flex-col rounded-2xl border backdrop-blur-xl transition-transform duration-300 hover:-translate-y-2
+                                ${prize.border} ${isFirst ? 'bg-white/5' : 'bg-black/40'} ${prize.shadow} shadow-lg`}
+                >
+                  {/* Top Badge */}
+                  <div className="absolute -top-6 left-1/2 -translate-x-1/2">
+                     <div className={`w-12 h-12 rounded-full flex items-center justify-center font-orbitron font-bold text-xl text-black border-4 border-black shadow-lg bg-gradient-to-br ${prize.gradient}`}>
+                        {prize.position}
+                     </div>
                   </div>
 
-                  {/* Content */}
-                  <div className="flex-1 flex flex-col items-center justify-center text-center pt-8">
-                    <prize.icon className={`w-12 h-12 mb-4 ${isFirst ? 'text-yellow-500' : 'text-primary'}`} />
-                    <h3 className="font-orbitron text-xl font-bold mb-2">{prize.title}</h3>
-                    <div className={`font-orbitron text-3xl font-black mb-4 bg-gradient-to-r ${prize.color} bg-clip-text text-transparent`}>
+                  {/* Card Content */}
+                  <div className="p-6 pt-10 flex-1 flex flex-col items-center text-center">
+                    
+                    {/* Icon Circle */}
+                    <div className={`mb-4 p-3 rounded-full bg-gradient-to-br ${prize.gradient} bg-opacity-10`}>
+                      <prize.icon className="w-8 h-8 text-black drop-shadow-md" strokeWidth={1.5} />
+                    </div>
+
+                    <h3 className={`font-orbitron font-bold text-2xl mb-2 text-transparent bg-clip-text bg-gradient-to-r ${prize.gradient}`}>
+                      {prize.title}
+                    </h3>
+                    
+                    <div className="font-orbitron text-4xl font-black text-white mb-6 tracking-tight">
                       {prize.prize}
                     </div>
-                    
-                    {/* Perks */}
-                    <ul className="space-y-1">
-                      {prize.perks.map((perk) => (
-                        <li key={perk} className="font-rajdhani text-sm text-muted-foreground flex items-center gap-2">
-                          <Star className="w-3 h-3 text-primary" />
-                          {perk}
-                        </li>
-                      ))}
-                    </ul>
+
+                    {/* Divider */}
+                    <div className={`w-full h-px bg-gradient-to-r from-transparent via-white/20 to-transparent mb-6`} />
+
+                    {/* Perks List - Aligned Properly */}
+                    <div className="w-full">
+                       <ul className="space-y-3 text-left inline-block w-full px-2">
+                         {prize.perks.map((perk, i) => (
+                           <li key={i} className="flex items-start gap-3 text-zinc-300 font-rajdhani text-sm">
+                             <div className={`mt-0.5 min-w-[16px] flex justify-center`}>
+                               <Check className={`w-4 h-4 text-transparent bg-clip-text bg-gradient-to-r ${prize.gradient}`} />
+                             </div>
+                             <span>{perk}</span>
+                           </li>
+                         ))}
+                       </ul>
+                    </div>
                   </div>
 
-                  {/* Podium Base */}
-                  <div className="h-2 bg-gradient-racing rounded-b-lg -mx-6 -mb-6 mt-4" />
+                  {/* Decorative Bottom Bar */}
+                  <div className={`h-2 w-full rounded-b-2xl bg-gradient-to-r ${prize.gradient} opacity-80`} />
                 </div>
               </div>
             );
           })}
         </div>
 
-        {/* Additional Prizes */}
-        <div className="grid sm:grid-cols-3 gap-6 max-w-4xl mx-auto">
+        {/* Additional Prizes Grid */}
+        <div className="grid sm:grid-cols-3 gap-6 max-w-5xl mx-auto">
           {additionalPrizes.map((prize, index) => (
             <div 
               key={prize.title}
-              className="card-racing p-6 text-center group hover:-translate-y-1 transition-all duration-300"
-              style={{ transitionDelay: `${index * 100}ms` }}
+              className="relative overflow-hidden rounded-xl border border-white/10 bg-white/5 p-6 text-center group hover:bg-white/10 transition-all duration-300"
             >
-              <div className="w-12 h-12 rounded-full bg-primary/10 border border-primary/20 
-                              flex items-center justify-center mx-auto mb-3
-                              group-hover:bg-primary/20 group-hover:shadow-neon transition-all duration-300">
-                <prize.icon className="w-6 h-6 text-primary" />
-              </div>
-              <h4 className="font-orbitron font-bold mb-1">{prize.title}</h4>
-              <p className="font-orbitron text-lg font-bold text-primary">{prize.prize}</p>
+               <div className="absolute top-0 left-0 w-1 h-full bg-primary/50 opacity-0 group-hover:opacity-100 transition-opacity" />
+               
+               <div className="w-12 h-12 rounded-lg bg-black border border-white/10 flex items-center justify-center mx-auto mb-4 group-hover:border-primary/50 group-hover:scale-110 transition-all duration-300">
+                  <prize.icon className="w-6 h-6 text-primary" />
+               </div>
+               
+               <h4 className="font-orbitron font-bold text-white mb-1 tracking-wide">{prize.title}</h4>
+               <p className="font-rajdhani font-bold text-xl text-primary">{prize.prize}</p>
             </div>
           ))}
         </div>
 
-        {/* Total Prize Pool */}
-        <div className="text-center mt-16">
-          <p className="font-rajdhani text-lg text-muted-foreground mb-2">Total Prize Pool</p>
-          <div className="font-orbitron text-5xl sm:text-6xl font-black text-gradient-racing animate-pulse-glow inline-block">
-            ₹10,00,000+
-          </div>
+        {/* Total Prize Pool Banner */}
+        <div className="mt-20 relative rounded-2xl overflow-hidden border border-primary/30 bg-primary/5 max-w-4xl mx-auto">
+           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent animate-pulse" />
+           <div className="relative p-8 text-center">
+              <p className="font-rajdhani text-xl text-zinc-400 mb-2 uppercase tracking-widest">Total Prize Pool</p>
+              <div className="font-orbitron text-5xl sm:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary via-white to-primary drop-shadow-[0_0_25px_rgba(var(--primary-rgb),0.5)]">
+                 ₹10,00,000+
+              </div>
+           </div>
         </div>
       </div>
     </section>
