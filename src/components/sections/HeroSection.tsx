@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { ChevronDown, Flag, Zap, Timer } from 'lucide-react';
-import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import heroImage from '@/assets/hero-f1.jpg';
+// IMPORTING VIDEO FROM THE SAME FOLDER
+// Ensure the file '3825524305-preview.mp4' is in src/components/sections/
+import heroVideo from './3825524305-preview.mp4'; 
 
 const HeroSection: React.FC = () => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -43,13 +45,26 @@ const HeroSection: React.FC = () => {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Image with Overlay */}
+      {/* Background Video with Overlay */}
       <div className="absolute inset-0">
-        <img 
-          src={heroImage} 
-          alt="F1 Racing" 
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
           className="w-full h-full object-cover opacity-60"
-        />
+          poster={heroImage} // Shows the image while video loads
+        >
+          <source src={heroVideo} type="video/mp4" />
+          {/* Fallback for browsers that don't support video */}
+          <img 
+            src={heroImage} 
+            alt="F1 Racing" 
+            className="w-full h-full object-cover"
+          />
+        </video>
+        
+        {/* Gradient Overlays for readability */}
         <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/40 to-background" />
         <div className="absolute inset-0 bg-gradient-to-r from-background/60 via-transparent to-background/60" />
       </div>
