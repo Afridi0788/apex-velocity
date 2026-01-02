@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { ChevronDown, Flag, Zap, Timer, Trophy, Users, Calendar } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import heroImage from '@/assets/hero-f1.jpg';
-import heroVideo from './3825524305-preview.mp4';
+import { ChevronLeft, ChevronRight, Flag } from 'lucide-react';
+import { motion } from 'framer-motion';
+import pitCrewImage from '@/assets/pit-crew.jpg';
+import heroF1Image from '@/assets/hero-f1.jpg';
 
 const HeroSection: React.FC = () => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -10,7 +10,6 @@ const HeroSection: React.FC = () => {
     days: 0,
     hours: 0,
     minutes: 0,
-    seconds: 0,
   });
 
   useEffect(() => {
@@ -27,7 +26,6 @@ const HeroSection: React.FC = () => {
           days: Math.floor(diff / (1000 * 60 * 60 * 24)),
           hours: Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
           minutes: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
-          seconds: Math.floor((diff % (1000 * 60)) / 1000),
         });
       }
     };
@@ -37,279 +35,256 @@ const HeroSection: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const scrollToAbout = () => {
-    document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
-  };
+  
 
   const stats = [
-    { value: '50+', label: 'Events', icon: Calendar },
-    { value: '5K+', label: 'Participants', icon: Users },
-    { value: '₹10L', label: 'Prize Pool', icon: Trophy },
+    { value: '50', label: 'Events' },
+    { value: '5000', label: 'Participants' },
+    { value: '25', label: 'Categories' },
   ];
 
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden">
-      {/* Premium Gradient Background */}
+    <section className="relative min-h-screen overflow-hidden">
+      {/* Premium Purple Gradient Background */}
       <div className="absolute inset-0">
-        {/* Video Background */}
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="w-full h-full object-cover"
-          poster={heroImage}
-        >
-          <source src={heroVideo} type="video/mp4" />
-          <img src={heroImage} alt="F1 Racing" className="w-full h-full object-cover" />
-        </video>
+        <div className="absolute inset-0 bg-gradient-to-br from-[hsl(250,45%,18%)] via-[hsl(260,40%,22%)] to-[hsl(270,35%,15%)]" />
         
-        {/* Premium Purple-Violet Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[hsl(260,60%,15%)] via-[hsl(250,50%,20%)] to-[hsl(280,40%,12%)] opacity-90" />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/50" />
+        {/* Subtle radial glow */}
+        <div className="absolute top-0 right-1/4 w-[800px] h-[800px] bg-[hsl(260,60%,30%)] rounded-full blur-[200px] opacity-30" />
+        <div className="absolute bottom-0 left-1/4 w-[600px] h-[600px] bg-[hsl(280,50%,25%)] rounded-full blur-[150px] opacity-20" />
         
-        {/* Subtle Grid Pattern */}
-        <div 
-          className="absolute inset-0 opacity-10"
-          style={{
-            backgroundImage: `linear-gradient(hsl(var(--primary) / 0.1) 1px, transparent 1px),
-                             linear-gradient(90deg, hsl(var(--primary) / 0.1) 1px, transparent 1px)`,
-            backgroundSize: '50px 50px',
-          }}
-        />
-        
-        {/* Ambient Glow Effects */}
-        <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-primary/20 rounded-full blur-[120px] animate-pulse" />
-        <div className="absolute bottom-1/4 left-1/4 w-64 h-64 bg-primary/10 rounded-full blur-[100px]" />
-      </div>
-
-      {/* Left Side - Vertical Stats Bar */}
-      <motion.div 
-        initial={{ opacity: 0, x: -50 }}
-        animate={isLoaded ? { opacity: 1, x: 0 } : {}}
-        transition={{ duration: 0.8, delay: 0.6 }}
-        className="absolute left-4 md:left-8 lg:left-12 top-1/2 -translate-y-1/2 z-20 hidden md:flex flex-col gap-8"
-      >
-        {stats.map((stat, index) => (
-          <motion.div
-            key={stat.label}
-            initial={{ opacity: 0, x: -30 }}
-            animate={isLoaded ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.8 + index * 0.1 }}
-            className="group relative"
-          >
-            {/* Glassmorphism Card */}
-            <div className="relative bg-card/30 backdrop-blur-xl border border-border/30 rounded-xl p-4 
-                          hover:bg-card/50 hover:border-primary/30 transition-all duration-300
-                          hover:shadow-[0_0_30px_hsl(var(--primary)/0.2)]">
-              {/* Glow line on left */}
-              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-8 bg-primary rounded-full
-                            group-hover:h-12 group-hover:shadow-[0_0_10px_hsl(var(--primary))] transition-all duration-300" />
-              
-              <div className="pl-3">
-                <div className="font-orbitron text-2xl lg:text-3xl font-bold text-foreground mb-1">
-                  {stat.value}
-                </div>
-                <div className="font-rajdhani text-xs uppercase tracking-widest text-muted-foreground">
-                  {stat.label}
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        ))}
-      </motion.div>
-
-      {/* Main Content - Center/Right */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-          {/* Left Content */}
-          <div className="lg:pl-20 xl:pl-32 text-center lg:text-left">
-            {/* Event Badge */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={isLoaded ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6 }}
-              className="inline-flex items-center gap-3 mb-6"
-            >
-              <div className="flex items-center gap-2 px-4 py-2 rounded-full 
-                            bg-card/40 backdrop-blur-xl border border-border/40">
-                <div className="w-2 h-2 bg-primary rounded-full animate-pulse" />
-                <span className="font-rajdhani font-medium text-sm uppercase tracking-wider text-muted-foreground">
-                  15-17 March 2026
-                </span>
-              </div>
-              <div className="px-3 py-1.5 rounded-full bg-primary/20 border border-primary/30">
-                <span className="font-rajdhani font-semibold text-xs uppercase tracking-wider text-primary">
-                  Grand Festival
-                </span>
-              </div>
-            </motion.div>
-
-            {/* Main Title */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={isLoaded ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="mb-6"
-            >
-              <h1 className="font-orbitron font-black text-5xl sm:text-6xl lg:text-7xl xl:text-8xl leading-none">
-                <span className="block text-gradient-racing mb-2">SOLUTIONS</span>
-                <span className="block text-foreground">2026</span>
-              </h1>
-            </motion.div>
-
-            {/* Subtitle with accent line */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={isLoaded ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="flex items-center gap-4 mb-8 justify-center lg:justify-start"
-            >
-              <div className="hidden sm:block w-12 h-0.5 bg-primary rounded-full" />
-              <p className="font-exo text-lg sm:text-xl text-muted-foreground">
-                Racing Into The Future of <span className="text-primary font-semibold">Innovation</span>
-              </p>
-            </motion.div>
-
-            {/* CTA Buttons */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={isLoaded ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.5 }}
-              className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start"
-            >
-              <button className="btn-racing group w-full sm:w-auto">
-                <span className="relative z-10 flex items-center justify-center gap-2">
-                  <Zap className="w-5 h-5" />
-                  Register Now
-                </span>
-              </button>
-              <button className="btn-outline-racing w-full sm:w-auto">
-                <span className="flex items-center justify-center gap-2">
-                  <Timer className="w-5 h-5" />
-                  Explore Events
-                </span>
-              </button>
-            </motion.div>
-
-            {/* Mobile Stats */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={isLoaded ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.7 }}
-              className="grid grid-cols-3 gap-4 mt-10 md:hidden"
-            >
-              {stats.map((stat) => (
-                <div key={stat.label} className="text-center">
-                  <div className="font-orbitron text-xl font-bold text-primary">{stat.value}</div>
-                  <div className="font-rajdhani text-xs uppercase tracking-wider text-muted-foreground">{stat.label}</div>
-                </div>
-              ))}
-            </motion.div>
-          </div>
-
-          {/* Right Content - Countdown & Info Panel */}
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={isLoaded ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="relative"
-          >
-            {/* Premium Glass Card */}
-            <div className="relative bg-card/20 backdrop-blur-2xl border border-border/30 rounded-2xl p-6 lg:p-8
-                          shadow-[0_8px_32px_hsl(var(--primary)/0.1)]">
-              {/* Corner Accents */}
-              <div className="absolute top-0 right-0 w-20 h-20 border-t-2 border-r-2 border-primary/40 rounded-tr-2xl" />
-              <div className="absolute bottom-0 left-0 w-20 h-20 border-b-2 border-l-2 border-primary/40 rounded-bl-2xl" />
-              
-              {/* Header */}
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-2">
-                  <Flag className="w-5 h-5 text-primary" />
-                  <span className="font-rajdhani font-semibold text-sm uppercase tracking-wider text-muted-foreground">
-                    Next Event
-                  </span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-                  <span className="font-rajdhani text-xs text-green-500 uppercase tracking-wider">Live Soon</span>
-                </div>
-              </div>
-
-              {/* Event Title in Card */}
-              <div className="mb-6">
-                <h3 className="font-orbitron text-xl lg:text-2xl font-bold text-foreground mb-1">
-                  Solutions 2026
-                </h3>
-                <p className="font-rajdhani text-muted-foreground">
-                  Technical Club Grand Festival
-                </p>
-              </div>
-
-              {/* Countdown Timer */}
-              <div className="grid grid-cols-4 gap-3 mb-6">
-                {[
-                  { label: 'Days', value: countdown.days },
-                  { label: 'Hrs', value: countdown.hours },
-                  { label: 'Min', value: countdown.minutes },
-                  { label: 'Sec', value: countdown.seconds },
-                ].map((item) => (
-                  <div key={item.label} className="text-center">
-                    <div className="relative bg-card/50 backdrop-blur-sm border border-border/50 rounded-xl p-3
-                                  group hover:border-primary/50 transition-all duration-300">
-                      <span className="font-orbitron text-2xl lg:text-3xl font-bold text-foreground block">
-                        {String(item.value).padStart(2, '0')}
-                      </span>
-                      {/* Subtle glow on hover */}
-                      <div className="absolute inset-0 rounded-xl bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    </div>
-                    <span className="font-rajdhani text-xs uppercase tracking-wider text-muted-foreground mt-2 block">
-                      {item.label}
-                    </span>
-                  </div>
-                ))}
-              </div>
-
-              {/* Divider */}
-              <div className="relative h-px bg-border/50 mb-6">
-                <div className="absolute left-1/2 -translate-x-1/2 -top-2 px-3 bg-card/50 backdrop-blur-sm">
-                  <span className="font-rajdhani text-xs uppercase tracking-widest text-muted-foreground">More Info</span>
-                </div>
-              </div>
-
-              {/* Quick Info */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-card/30 rounded-lg p-3 border border-border/30">
-                  <div className="font-rajdhani text-xs uppercase tracking-wider text-muted-foreground mb-1">Venue</div>
-                  <div className="font-exo text-sm font-semibold text-foreground">Campus Arena</div>
-                </div>
-                <div className="bg-card/30 rounded-lg p-3 border border-border/30">
-                  <div className="font-rajdhani text-xs uppercase tracking-wider text-muted-foreground mb-1">Duration</div>
-                  <div className="font-exo text-sm font-semibold text-foreground">3 Days</div>
-                </div>
-              </div>
-            </div>
-
-            {/* Decorative floating elements */}
-            <div className="absolute -top-4 -right-4 w-8 h-8 border-2 border-primary/30 rounded-lg rotate-12 animate-float" />
-            <div className="absolute -bottom-6 -left-6 w-12 h-12 border border-primary/20 rounded-full animate-pulse" />
-          </motion.div>
+        {/* Large "26" watermark */}
+        <div className="absolute left-0 top-1/2 -translate-y-1/2 font-orbitron text-[30rem] font-black text-white/[0.03] leading-none select-none pointer-events-none">
+          26
         </div>
       </div>
 
-      {/* Scroll Indicator */}
-      <motion.button 
-        onClick={scrollToAbout}
-        initial={{ opacity: 0 }}
-        animate={isLoaded ? { opacity: 1 } : {}}
-        transition={{ duration: 0.6, delay: 1 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 group"
-      >
-        <span className="font-rajdhani text-xs uppercase tracking-widest text-muted-foreground group-hover:text-primary transition-colors">
-          Explore
-        </span>
-        <ChevronDown className="w-6 h-6 text-primary animate-bounce" />
-      </motion.button>
+      {/* Spacer for fixed navigation */}
+      <div className="h-20" />
+
+      {/* Main Content Grid */}
+      <div className="relative z-10 grid lg:grid-cols-[1fr_1.2fr] min-h-[calc(100vh-80px)]">
+        
+        {/* Left Side - Person/Visual + Stats */}
+        <div className="relative flex items-end justify-center lg:justify-start">
+          {/* Vertical Stats - Left Edge */}
+          <motion.div 
+            initial={{ opacity: 0, x: -30 }}
+            animate={isLoaded ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="absolute left-4 lg:left-8 top-1/2 -translate-y-1/2 z-20 hidden md:flex flex-col gap-6"
+          >
+            {stats.map((stat, index) => (
+              <div key={stat.label} className="relative pl-4">
+                {/* Accent line */}
+                <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary via-primary/50 to-transparent" />
+                <div className="font-rajdhani text-xs uppercase tracking-widest text-muted-foreground mb-1">
+                  {stat.label}
+                </div>
+                <div className="font-orbitron text-3xl lg:text-4xl font-bold text-foreground">
+                  {stat.value}
+                </div>
+              </div>
+            ))}
+          </motion.div>
+
+          {/* Navigation Arrows */}
+          <div className="absolute left-4 bottom-1/4 z-20 hidden lg:flex flex-col gap-2">
+            <button className="p-2 rounded-full bg-card/20 backdrop-blur-sm border border-border/30 text-muted-foreground hover:text-primary hover:border-primary/50 transition-all">
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            <button className="p-2 rounded-full bg-card/20 backdrop-blur-sm border border-border/30 text-muted-foreground hover:text-primary hover:border-primary/50 transition-all">
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* Main Person/Visual Image */}
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            animate={isLoaded ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 1, delay: 0.2 }}
+            className="relative w-full h-full flex items-end justify-center"
+          >
+            <img 
+              src={pitCrewImage} 
+              alt="Event Visual" 
+              className="h-[70vh] lg:h-[85vh] w-auto object-contain object-bottom drop-shadow-2xl"
+            />
+            {/* Gradient fade at bottom */}
+            <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[hsl(260,40%,15%)] to-transparent" />
+          </motion.div>
+        </div>
+
+        {/* Right Side - Event Info + Car */}
+        <div className="relative flex flex-col justify-center px-6 lg:px-0 lg:pr-12 py-12">
+          
+          {/* Top Right - Countdown Timer */}
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={isLoaded ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="absolute top-8 right-6 lg:right-12 flex items-center gap-6"
+          >
+            {/* Event Badge */}
+            <div className="flex items-center gap-3">
+              <div className="text-right">
+                <div className="font-rajdhani text-xs uppercase tracking-wider text-muted-foreground">
+                  15-17 March
+                </div>
+                <div className="font-exo text-sm font-semibold text-foreground flex items-center gap-2">
+                  Solutions 2026
+                  <Flag className="w-4 h-4 text-primary" />
+                </div>
+              </div>
+            </div>
+
+            {/* Countdown */}
+            <div className="flex items-center gap-4 pl-6 border-l border-border/30">
+              {[
+                { label: 'Days', value: countdown.days },
+                { label: 'Hrs', value: countdown.hours },
+                { label: 'Mins', value: countdown.minutes },
+              ].map((item) => (
+                <div key={item.label} className="text-center">
+                  <div className="font-orbitron text-2xl lg:text-3xl font-bold text-foreground">
+                    {String(item.value).padStart(2, '0')}
+                  </div>
+                  <div className="font-rajdhani text-[10px] uppercase tracking-wider text-muted-foreground">
+                    {item.label}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Center Content */}
+          <div className="mt-20 lg:mt-0">
+            {/* Event Title */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={isLoaded ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="mb-6"
+            >
+              <h1 className="font-orbitron text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-foreground leading-tight">
+                Solutions <span className="text-primary">2026</span>
+              </h1>
+            </motion.div>
+
+            {/* Event Subtitle with accent */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={isLoaded ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: 0.5 }}
+              className="flex items-center gap-4 mb-4"
+            >
+              <div className="flex items-center gap-3">
+                <span className="font-orbitron text-2xl font-bold text-primary">S26</span>
+                <div className="w-8 h-0.5 bg-primary" />
+              </div>
+              <div>
+                <div className="font-exo text-lg font-semibold text-foreground">
+                  Technical Club Grand Festival
+                </div>
+                <div className="font-rajdhani text-sm text-muted-foreground flex items-center gap-2">
+                  <span className="inline-block w-4 h-3 rounded-sm bg-gradient-to-r from-orange-500 via-white to-green-500" />
+                  Campus Arena, India
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Mini Chart/Stats Visual */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={isLoaded ? { opacity: 1 } : {}}
+              transition={{ duration: 0.6, delay: 0.6 }}
+              className="flex items-end gap-1 h-12 mb-8"
+            >
+              {[40, 65, 45, 80, 55, 90, 70, 85, 60, 75].map((height, i) => (
+                <div
+                  key={i}
+                  className="w-2 bg-gradient-to-t from-primary/30 to-primary rounded-t"
+                  style={{ height: `${height}%` }}
+                />
+              ))}
+              <span className="ml-2 font-rajdhani text-sm text-muted-foreground">92%</span>
+            </motion.div>
+
+            {/* Team/Club Logo */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={isLoaded ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.6, delay: 0.7 }}
+              className="absolute right-6 lg:right-12 top-1/2 -translate-y-1/2 hidden xl:block"
+            >
+              <div className="text-right">
+                <div className="font-orbitron text-xs uppercase tracking-widest text-muted-foreground mb-2">
+                  Presented By
+                </div>
+                <div className="font-orbitron text-xl font-bold text-foreground">
+                  TECHNICAL
+                </div>
+                <div className="font-orbitron text-xl font-bold text-primary">
+                  CLUB
+                </div>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Bottom - Car Image + Info */}
+          <motion.div
+            initial={{ opacity: 0, x: 100 }}
+            animate={isLoaded ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 1, delay: 0.6 }}
+            className="relative mt-auto"
+          >
+            {/* F1 Car Image */}
+            <div className="relative">
+              <img 
+                src={heroF1Image} 
+                alt="F1 Racing Car" 
+                className="w-full max-w-2xl h-auto object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
+              />
+              
+              {/* Speed trail effect */}
+              <div className="absolute top-1/2 -left-20 w-32 h-1 bg-gradient-to-r from-primary/50 to-transparent blur-sm" />
+              <div className="absolute top-1/2 -translate-y-4 -left-16 w-24 h-0.5 bg-gradient-to-r from-primary/30 to-transparent blur-sm" />
+            </div>
+
+            {/* Bottom Info */}
+            <div className="flex items-end justify-between mt-4">
+              <button className="font-rajdhani text-sm text-muted-foreground hover:text-primary transition-colors flex items-center gap-2">
+                <span className="w-4 h-px bg-current" />
+                More information
+              </button>
+              
+              <div className="text-right">
+                <div className="font-rajdhani text-xs uppercase tracking-wider text-muted-foreground">
+                  Edition
+                </div>
+                <div className="font-orbitron text-2xl font-bold text-foreground">
+                  2026
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Mobile Stats */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={isLoaded ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.8 }}
+            className="grid grid-cols-3 gap-4 mt-8 md:hidden"
+          >
+            {stats.map((stat) => (
+              <div key={stat.label} className="text-center">
+                <div className="font-orbitron text-2xl font-bold text-foreground">{stat.value}</div>
+                <div className="font-rajdhani text-xs uppercase tracking-wider text-muted-foreground">{stat.label}</div>
+              </div>
+            ))}
+          </motion.div>
+        </div>
+      </div>
 
       {/* Bottom Racing Stripe */}
       <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50" />
